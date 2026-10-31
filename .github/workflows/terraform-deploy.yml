@@ -48,3 +48,12 @@ jobs:
                   for key in ("iss", "aud", "sub", "repository", "ref", "event_name"):
                       print(f"{key}: {claims.get(key)}")
                   PY
+
+            - name: Authenticate to AWS
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: arn:aws:iam::844274145888:role/GitHubActionsTerraformDeploy
+                  aws-region: us-east-2
+
+            - name: Verify AWS identity
+              run: aws sts get-caller-identity
