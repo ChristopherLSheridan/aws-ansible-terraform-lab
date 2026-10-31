@@ -1,0 +1,23 @@
+name: Terraform Deployment
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    deployment-check:
+        name: Verify Manual Deployment Trigger
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Display deployment information
+              run: |
+                  echo "Deployment workflow triggered successfully!"
+                  echo "Repository: $GITHUB_REPOSITORY"
+                  echo "Branch: $GITHUB_REF_NAME"
+                  echo "Triggered by: $GITHUB_ACTOR"
