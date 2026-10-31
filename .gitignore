@@ -40,3 +40,6 @@ puppet/environments/*/private/
 .idea/
 *.swp
 *~
+
+# Generated Ansible inventory
+ansible/inventory.generated.ini
