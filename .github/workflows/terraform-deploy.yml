@@ -70,3 +70,9 @@ jobs:
             - name: List Terraform state resources
               working-directory: terraform
               run: terraform state list
+
+            - name: Preview Terraform changes
+              working-directory: terraform
+              env:
+                  TF_VAR_ssh_allowed_cidr: ${{ vars.SSH_ALLOWED_CIDR }}
+              run: terraform plan -input=false -lock=false -no-color
