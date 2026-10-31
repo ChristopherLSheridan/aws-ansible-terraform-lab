@@ -11,6 +11,10 @@ on:
 permissions:
     contents: read
 
+concurrency:
+    group: terraform-lab-deployment
+    cancel-in-progress: false
+
 jobs:
     deployment-check:
         name: Verify Deployment OIDC Identity
@@ -89,3 +93,20 @@ jobs:
               env:
                   TF_VAR_ssh_allowed_cidr: ${{ vars.SSH_ALLOWED_CIDR }}
               run: terraform plan -input=false -lock=false -no-color
+
+            - name: Check Terraform plan status
+              working-directory: terraform
+              env:
+                  TF_VAR_ssh_allowed_cidr: ${{ vars.SSH_ALLOWED_CIDR }}
+              run: |
+                  result=0
+                  terraform plan -input=false -lock=false -detailed-exitcode -no-color || result=$?
+
+                  if [[ "$result" -eq 0 ]]; then
+                    echo "No infrastructure changes detected."
+                  elif [[ "$result" -eq 2 ]]; then
+                    echo "Terraform detected infrastructure changes."
+                  else
+                    echo "Terraform plan failed."
+                    exit 1
+                  fi
