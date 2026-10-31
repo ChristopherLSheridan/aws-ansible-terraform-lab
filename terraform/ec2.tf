@@ -1,8 +1,7 @@
 
-# Latest Ubuntu 24.04 LTS AMI
+# Pinned Ubuntu 24.04 LTS AMI to prevent unintended EC2 replacement
 data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"]
+  owners = ["099720109477"]
 
   filter {
     name   = "name"
@@ -17,6 +16,11 @@ data "aws_ami" "ubuntu" {
   filter {
     name   = "architecture"
     values = ["x86_64"]
+  }
+
+  filter {
+    name   = "image-id"
+    values = ["ami-02ad619be5bc165df"]
   }
 }
 

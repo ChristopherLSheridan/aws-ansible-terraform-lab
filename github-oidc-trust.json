@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::844274145888:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub": [
+            "repo:ChristopherLSheridan@23305216/aws-ansible-terraform-lab@1418198653:ref:refs/heads/main",
+            "repo:ChristopherLSheridan@23305216/aws-ansible-terraform-lab@1418198653:pull_request"
+          ]
+        }
+      }
+    }
+  ]
+}
