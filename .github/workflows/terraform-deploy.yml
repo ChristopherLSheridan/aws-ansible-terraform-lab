@@ -94,7 +94,7 @@ jobs:
                   TF_VAR_ssh_allowed_cidr: ${{ vars.SSH_ALLOWED_CIDR }}
               run: |
                   result=0
-                  terraform plan -input=false -lock=false -detailed-exitcode -no-color || result=$?
+                  terraform plan -input=false -lock=false -detailed-exitcode -no-color -out=tfplan || result=$?
 
                   if [[ "$result" -eq 0 ]]; then
                     echo "No infrastructure changes detected."
@@ -104,3 +104,14 @@ jobs:
                     echo "Terraform plan failed."
                     exit 1
                   fi
+
+            - name: Reject destructive infrastructure changes
+              working-directory: terraform
+              run: |
+                  terraform show -json tfplan |
+                    jq -e '
+                      [.resource_changes[]?
+                       | select(.change.actions | index("delete"))]
+                      | length == 0
+                    '
+                  echo "Safety check passed: no deletions or replacements."
