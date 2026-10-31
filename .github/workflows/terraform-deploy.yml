@@ -10,6 +10,7 @@ jobs:
     deployment-check:
         name: Verify Manual Deployment Trigger
         runs-on: ubuntu-latest
+        environment: lab
 
         steps:
             - name: Checkout repository
