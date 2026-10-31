@@ -2,6 +2,11 @@ name: Terraform Deployment
 
 on:
     workflow_dispatch:
+        inputs:
+            confirm_apply:
+                description: "Type APPLY to authorize infrastructure changes"
+                required: true
+                type: string
 
 permissions:
     contents: read
@@ -17,6 +22,14 @@ jobs:
             id-token: write
 
         steps:
+            - name: Verify deployment confirmation
+              env:
+                  CONFIRM_APPLY: ${{ inputs.confirm_apply }}
+              run: |
+                  if [[ "$CONFIRM_APPLY" != "APPLY" ]]; then
+                    echo "Deployment not authorized. Enter APPLY to continue."
+                    exit 1
+                  fi
             - name: Checkout repository
               uses: actions/checkout@v4
 
