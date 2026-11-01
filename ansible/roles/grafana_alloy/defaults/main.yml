@@ -1,0 +1,8 @@
+---
+alloy_scrape_interval: "60s"
+
+alloy_metrics_url: "https://prometheus-prod-66-prod-us-east-3.grafana.net/api/prom/push"
+alloy_metrics_username: "3601584"
+
+alloy_logs_url: "https://logs-prod-042.grafana.net/loki/api/v1/push"
+alloy_logs_username: "1796463"

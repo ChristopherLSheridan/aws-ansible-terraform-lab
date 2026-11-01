@@ -1,3 +1,7 @@
+# Ansible secrets and generated inventory
+ansible/group_vars/all/vault.yml
+ansible/inventory.generated.ini
+
 # Terraform state (may contain sensitive information)
 *.tfstate
 *.tfstate.*
@@ -11,6 +15,7 @@
 
 # Terraform plan files
 *.tfplan
+**/tfplan
 crash.log
 crash.*.log
 

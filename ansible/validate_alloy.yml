@@ -1,0 +1,15 @@
+---
+- name: Validate Grafana Alloy template
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - roles/grafana_alloy/defaults/main.yml
+
+  tasks:
+    - name: Render Alloy configuration locally
+      ansible.builtin.template:
+        src: roles/grafana_alloy/templates/config.alloy.j2
+        dest: /tmp/config.alloy
+        mode: "0600"

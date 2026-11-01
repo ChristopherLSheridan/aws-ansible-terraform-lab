@@ -1,0 +1,70 @@
+---
+- name: Install prerequisites for Grafana repository
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - gnupg
+    state: present
+    update_cache: true
+  become: true
+
+- name: Download Grafana repository signing key
+  ansible.builtin.get_url:
+    url: https://apt.grafana.com/gpg.key
+    dest: /tmp/grafana-repository.key
+    mode: "0644"
+  become: true
+
+- name: Install Grafana repository signing key
+  ansible.builtin.command:
+    cmd: gpg --dearmor --yes -o /usr/share/keyrings/grafana.gpg /tmp/grafana-repository.key
+  args:
+    creates: /usr/share/keyrings/grafana.gpg
+  become: true
+
+- name: Configure Grafana APT repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/grafana.list
+    content: |
+      deb [signed-by=/usr/share/keyrings/grafana.gpg] https://apt.grafana.com stable main
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+
+- name: Install Grafana alloy
+  ansible.builtin.apt:
+    name: alloy
+    state: present
+    update_cache: true
+  become: true
+
+- name: Create Alloy systemd override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/alloy.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+
+- name: Deploy Alloy credentials
+  ansible.builtin.template:
+    src: alloy-env.conf.j2
+    dest: /etc/systemd/system/alloy.service.d/env.conf
+    owner: root
+    group: root
+    mode: "0600"
+  become: true
+  no_log: true
+  notify: Restart Grafana Alloy
+
+- name: Deploy Grafana Alloy configuration
+  ansible.builtin.template:
+    src: config.alloy.j2
+    dest: /etc/alloy/config.alloy
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  notify: Restart Grafana Alloy

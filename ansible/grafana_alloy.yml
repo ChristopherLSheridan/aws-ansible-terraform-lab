@@ -1,0 +1,7 @@
+---
+- name: Configure Grafana Alloy monitoring
+  hosts: webservers
+  become: true
+
+  roles:
+    - grafana_alloy
